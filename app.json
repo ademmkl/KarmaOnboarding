@@ -1,11 +1,4 @@
 {
-  "expo": {
-    "name": "KarmaOnboarding",
-    "slug": "KarmaOnboarding",
-    "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ]
-  },
-  "name": "KarmaOnboarding"
+  "name": "KarmaOnboarding",
+  "displayName": "KarmaOnboarding"
 }
