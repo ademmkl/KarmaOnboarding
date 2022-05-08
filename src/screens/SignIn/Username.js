@@ -55,10 +55,7 @@ const Username = () => {
         />
       </View>
 
-      <View style={{ flexDirection: "row" }}>
-        <TouchableOpacity style={styles.previous}>
-          <Text style={styles.text}>Geri Dön</Text>
-        </TouchableOpacity>
+      <View style={{ width: 230}}>
         <TouchableOpacity onPress={checkUser} style={styles.next}>
           <Text style={styles.text}>Sıradaki</Text>
         </TouchableOpacity>
@@ -90,15 +87,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 0,
     marginBottom: 50
-  },
-  previous: {
-    backgroundColor: "#fff",
-    height: 40,
-    width: 110,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 5,
-    opacity: 0.5
   },
   next: {
     backgroundColor: "#fff",
