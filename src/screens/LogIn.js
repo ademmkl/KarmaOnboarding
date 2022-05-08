@@ -12,10 +12,11 @@ import {
 import { useNavigation } from "@react-navigation/native";
 
 import { useDispatch, useSelector } from 'react-redux';
-import { SetPass } from '../redux/action';
+import { SetLogin, SetPass } from '../redux/action';
 
 
 const LogIn = () => {
+  const [feedback, setFeedback] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -34,14 +35,16 @@ const LogIn = () => {
     if (userExists.length) {
 
       if (userExists[0].password === password) {
-        dispatch(SetPass(true))
+        setFeedback("");
+        dispatch(SetLogin(userExists[0].id))
+        dispatch(SetPass(true));
       } else {
-        console.log("Kullanıcı adı veya şifre hatalı.")
+        setFeedback("*Kullanıcı adı veya şifre hatalı.");
       }
 
-    } else (
-      console.log("Kullanıcı adı veya şifre hatalı.")
-    )
+    } else{
+      setFeedback("*Kullanıcı adı veya şifre hatalı.");
+    }
 
   }
 
@@ -64,6 +67,9 @@ const LogIn = () => {
             <Text style={styles.text}>Kaydol</Text>
           </TouchableOpacity>
         </View>
+        <Text style={styles.feedback}>
+          {feedback}
+        </Text>
     </SafeAreaView>
   );
 }
@@ -99,5 +105,10 @@ const styles = StyleSheet.create({
     color: "#5e21ff",
     fontSize: 15,
     fontWeight: "bold"
+  },
+  feedback:{
+    marginTop: 20,
+    color: "#fff",
+    fontSize: 15
   }
 });

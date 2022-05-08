@@ -16,11 +16,12 @@ import { SetNew } from '../../redux/action';
 
 
 const Username = () => {
-  const [username, setUsername] = useState("")
+  const [feedback, setFeedback] = useState("");
+  const [username, setUsername] = useState("");
 
   const navigation = useNavigation();
 
-  const {GeneralResponse} = useSelector(s=>s)
+  const { GeneralResponse } = useSelector(s => s)
   const dispatch = useDispatch();
 
   const checkUser = () => {
@@ -31,10 +32,13 @@ const Username = () => {
       }
     )
 
-    if(userExists){
-      console.log("Böyle bir kullanıcı mevcuttur.")
-    }else{
-      dispatch(SetNew({...GeneralResponse.newUser, username: username}))
+    if (userExists) {
+      setFeedback("*Böyle bir kullanıcı mevcuttur.")
+    } else if (username == "") {
+      setFeedback("*Lütfen kullanıcı adınızı giriniz.")
+    } else {
+      setFeedback("")
+      dispatch(SetNew({ ...GeneralResponse.newUser, username: username }))
       navigation.navigate("birthday")
     }
   }
@@ -60,6 +64,9 @@ const Username = () => {
         </TouchableOpacity>
       </View>
 
+      <Text style={styles.feedback}>
+        {feedback}
+      </Text>
 
     </SafeAreaView>
   );
@@ -90,7 +97,8 @@ const styles = StyleSheet.create({
     width: 110,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 5
+    marginRight: 5,
+    opacity: 0.5
   },
   next: {
     backgroundColor: "#fff",
@@ -104,6 +112,11 @@ const styles = StyleSheet.create({
     color: "#5e21ff",
     fontSize: 15,
     fontWeight: "bold"
+  },
+  feedback:{
+    marginTop: 20,
+    color: "#fff",
+    fontSize:15
   }
 
 });

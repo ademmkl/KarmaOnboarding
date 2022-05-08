@@ -14,7 +14,7 @@ import Card from '../UserCard';
 
 import { useSelector } from 'react-redux';
 
-const Home = () => {
+const Likes = () => {
   const [refresh, setRefresh] = useState(false);
   const [users, setUsers] = useState([]);
 
@@ -22,8 +22,12 @@ const Home = () => {
 
   useEffect(() => {
 
+    const userCurrent = GeneralResponse.user.find((value)=>{
+        return GeneralResponse.login === value.id
+    })
+
     const newArr = GeneralResponse.user.filter((value) => {
-      return value.id != GeneralResponse.login
+      return userCurrent.likes.includes(value.id)
     })
 
     setUsers(newArr);
@@ -41,7 +45,7 @@ const Home = () => {
     <SafeAreaView style={styles.container}>
       <View style={{ width: Dimensions.get("screen").width, height: 60, alignItems: "center", justifyContent: "center" }}>
         <Text style={{color: "#fff", fontSize: 20,}}>
-          Yeni İnsanlarla Tanış!
+          Seni Beğenenler
         </Text>
       </View>
 
@@ -55,7 +59,7 @@ const Home = () => {
     </SafeAreaView>
   );
 }
-export default Home;
+export default Likes;
 
 
 const styles = StyleSheet.create({

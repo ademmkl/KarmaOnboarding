@@ -14,66 +14,75 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { SetNew } from '../../redux/action';
 
-import {launchCamera, launchImageLibrary} from "react-native-image-picker"
+import ImagePicker from 'react-native-image-crop-picker';
 
 
 const Photo = () => {
-
-  const [image, setImage] = useState("")
+  const [feedback, setFeedback] = useState("");
 
   const navigation = useNavigation();
 
-  const {GeneralResponse} = useSelector(s=>s)
+  const { GeneralResponse } = useSelector(s => s)
   const dispatch = useDispatch();
 
 
-  const takePhoto = async () => {
-    const options = {
-      maxWidth: 300,
-      maxHeight: 300,
-      quality: 1
-    }
-
-    await launchCamera(options, (res) => {
-      console.log("res", res)
-    })
+  const takePhoto = () => {
+    ImagePicker.openCamera({
+      width: 300,
+      height: 300,
+      cropping: true,
+    }).then(image => {
+      dispatch(SetNew({...GeneralResponse.newUser, image: image? image.path: ""}));
+    });
   }
 
-  const getPhoto = async () => {
-    const options = {
-      maxWidth: 300,
-      maxHeight: 300,
-      quality: 1,
-      mediaType: "photo"
+  const getPhoto = () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 300,
+      cropping: true
+    }).then(image => {
+      dispatch(SetNew({...GeneralResponse.newUser, image: image? image.path: ""}));
+    });
+  }
+
+  const checkPhoto = () => {
+
+    if(GeneralResponse.newUser.image === ""){
+      setFeedback("*Devam etmek için lütfen bir profil fotografı seçin.");
+    }else{
+      setFeedback("");
+      navigation.navigate("password");
     }
 
-    await launchImageLibrary(options, (res) => {
-      console.log("res", res)
-    })
+    
   }
 
 
   return (
     <SafeAreaView style={styles.container}>
 
-        <Image source={require("./avatar.png")} resizeMode="contain" style={{width:100, height:100}}/>
+      <Image source={GeneralResponse.newUser.image != "" ? { uri: GeneralResponse.newUser.image, width: 150, height: 150 } : require("./avatar.png")} resizeMode="contain" style={{ width: 150, height: 150, borderRadius: 75 }} />
 
-        <View style={{ flexDirection: "row", marginVertical: 40}}>
+      <View style={{ flexDirection: "row", marginVertical: 40 }}>
         <TouchableOpacity onPress={() => navigation.goBack(null)} style={styles.previous}>
           <Text style={styles.text}>Geri Dön</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("password")} style={styles.next}>
+        <TouchableOpacity onPress={checkPhoto} style={styles.next}>
           <Text style={styles.text}>Sıradaki</Text>
         </TouchableOpacity>
       </View>
 
-        <TouchableOpacity onPress={takePhoto} style={styles.cam}>
-          <Text style={styles.text}>Fotoğraf Çek</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={getPhoto} style={styles.lib}>
-          <Text style={styles.text}>Galeriden Seç</Text>
-        </TouchableOpacity>
+      <TouchableOpacity onPress={takePhoto} style={styles.cam}>
+        <Text style={styles.text}>Fotoğraf Çek</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={getPhoto} style={styles.lib}>
+        <Text style={styles.text}>Galeriden Seç</Text>
+      </TouchableOpacity>
 
+      <Text style={styles.feedback}>
+        {feedback}
+      </Text>
 
     </SafeAreaView>
   );
@@ -125,6 +134,11 @@ const styles = StyleSheet.create({
     color: "#5e21ff",
     fontSize: 15,
     fontWeight: "bold"
+  },
+  feedback:{
+    marginTop: 20,
+    color: "#fff",
+    fontSize:15
   }
 
 });

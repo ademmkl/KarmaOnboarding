@@ -13,3 +13,17 @@ export const SetNew = (newUser) => {
         payload: newUser
     }
 }
+
+export const SetLogin = (login) => {
+    return {
+        type: "SET_LOGIN",
+        payload: login
+    }
+}
+
+export const SetUsers = (users) => {
+    return {
+        type: "SET_USERS",
+        payload: users
+    }
+}
