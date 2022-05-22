@@ -1,3 +1,4 @@
+import { useAtom } from "jotai";
 import React from "react";
 import {
     View,
@@ -8,27 +9,27 @@ import {
     TouchableOpacity
 } from "react-native"
 
-import { useDispatch, useSelector } from "react-redux";
-import { SetUsers } from "./redux/action";
+import { users, currentUser } from "./screens/jotai/store";
 
 const Card = (props) => {
-    const dispatch = useDispatch();
-    const {GeneralResponse} = useSelector(s=>s)
+
+    const [currentUserData] = useAtom(currentUser);
+    const [usersData, setUsersData] = useAtom(users);
 
     const like = () => {
         
-        if( !props.info.likes.includes(GeneralResponse.login) ){
+        if( !props.info.likes.includes(currentUserData.id) ){
 
-            dispatch(SetUsers(GeneralResponse.user.map((value)=>{
+            setUsersData(usersData.map((value)=>{
                 if(value.id === props.info.id){
                     return {
                         ...value,
-                        likes:props.info.likes.push(GeneralResponse.login)
+                        likes:props.info.likes.push(currentUserData.id)
                     }
                 }else{
                     return value
                 }
-            })));
+            })) ;
         }
 
     }

@@ -1,16 +1,26 @@
+import { atom } from "jotai";
 
 
+export const currentUser = atom({});
 
-const INITIAL_STATE={
-    pass: false,
-    user:[
+export const newUser = atom({
+    username: "",
+    date: new Date(),
+    image: "",
+    password: "",
+    id: "",
+    likes: []
+});
+
+export const users = atom(
+    [
         {
             id: "0",
             username: "karma",
             password: "karma_onboarding",
             birthday: new Date(2021, 6, 19),
             image: "https://media-exp1.licdn.com/dms/image/C4E0BAQEPVUo-RCiUaA/company-logo_200_200/0/1644675616052?e=2147483647&v=beta&t=-TgQZ_HjNkYeM-XrNL5X3dVHrdouQzluqkzKQbqHclQ",
-            likes: ["1","2","3","4","5"]
+            likes: ["1", "2", "3", "4", "5"]
         },
         {
             id: "1",
@@ -50,32 +60,7 @@ const INITIAL_STATE={
             password: "user5_6789",
             birthday: new Date(2021, 6, 19),
             image: "https://imgk.timesnownews.com/story/MUSK_2.png?tr=w-400,h-300,fo-auto",
-            likes: ["2","3"]
+            likes: ["2", "3"]
         }
-    ],
-    newUser:{
-        username: "",
-        date: new Date(),
-        image: "",
-        password: "",
-        id:"",
-        likes:[]
-    },
-    login: ""
-}
-
-
-export default (state=INITIAL_STATE, action) => {
-    switch (action.type) {
-        case "SET_PASS":
-            return {...state, pass: action.payload}
-        case "SET_NEW":
-            return {...state, newUser: action.payload}
-        case "SET_LOGIN":
-            return {...state, login: action.payload}
-        case "SET_USERS":
-            return {...state, user: action.payload}
-        default:
-            return state;
-    }
-}
+    ]
+);

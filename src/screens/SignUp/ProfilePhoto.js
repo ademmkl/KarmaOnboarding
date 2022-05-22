@@ -11,19 +11,17 @@ import {
 
 import { useNavigation } from "@react-navigation/native";
 
-import { useDispatch, useSelector } from "react-redux";
-import { SetNew } from '../../redux/action';
-
 import ImagePicker from 'react-native-image-crop-picker';
+
+import { atom, useAtom } from 'jotai';
+import { newUser } from '../jotai/store';
 
 
 const Photo = () => {
   const [feedback, setFeedback] = useState("");
+  const [newUserData, setNewUserData] = useAtom(newUser);
 
   const navigation = useNavigation();
-
-  const { GeneralResponse } = useSelector(s => s)
-  const dispatch = useDispatch();
 
 
   const takePhoto = () => {
@@ -32,7 +30,7 @@ const Photo = () => {
       height: 300,
       cropping: true,
     }).then(image => {
-      dispatch(SetNew({...GeneralResponse.newUser, image: image? image.path: ""}));
+      setNewUserData({...newUserData, image: image? image.path: ""});
     });
   }
 
@@ -42,13 +40,13 @@ const Photo = () => {
       height: 300,
       cropping: true
     }).then(image => {
-      dispatch(SetNew({...GeneralResponse.newUser, image: image? image.path: ""}));
+      setNewUserData({...newUserData, image: image? image.path: ""});
     });
   }
 
   const checkPhoto = () => {
 
-    if(GeneralResponse.newUser.image === ""){
+    if(newUserData.image === ""){
       setFeedback("*Devam etmek için lütfen bir profil fotografı seçin.");
     }else{
       setFeedback("");
@@ -62,7 +60,7 @@ const Photo = () => {
   return (
     <SafeAreaView style={styles.container}>
 
-      <Image source={GeneralResponse.newUser.image != "" ? { uri: GeneralResponse.newUser.image, width: 150, height: 150 } : require("./avatar.png")} resizeMode="contain" style={{ width: 150, height: 150, borderRadius: 75 }} />
+      <Image source={newUserData.image != "" ? { uri: newUserData.image, width: 150, height: 150 } : require("./avatar.png")} resizeMode="contain" style={{ width: 150, height: 150, borderRadius: 75 }} />
 
       <View style={{ flexDirection: "row", marginVertical: 40 }}>
         <TouchableOpacity onPress={() => navigation.goBack(null)} style={styles.previous}>

@@ -12,21 +12,25 @@ import {
 
 import Card from '../UserCard';
 
-import { useSelector } from 'react-redux';
+import { useAtom } from 'jotai';
+import {currentUser} from './jotai/store';
+import { users } from './jotai/store';
+
 
 const Home = () => {
   const [refresh, setRefresh] = useState(false);
-  const [users, setUsers] = useState([]);
+  const [otherUsers, setOtherUsers] = useState([]);
 
-  const { GeneralResponse } = useSelector(s => s);
+  const [current] = useAtom(currentUser);
+  const [users_db] = useAtom(users);
 
   useEffect(() => {
 
-    const newArr = GeneralResponse.user.filter((value) => {
-      return value.id != GeneralResponse.login
+    const newArr = users_db.filter((value) => {
+      return value.id != current.id
     })
 
-    setUsers(newArr);
+    setOtherUsers(newArr);
 
   }, []);
 
@@ -46,7 +50,7 @@ const Home = () => {
       </View>
 
       <FlatList
-        data={users}
+        data={otherUsers}
         renderItem={({ item }) => <Card info={item} />}
         keyExtractor={item => item.id}
         contentContainerStyle={{ alignItems: "center", width: Dimensions.get("screen").width}}

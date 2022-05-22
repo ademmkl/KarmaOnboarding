@@ -9,25 +9,25 @@ import {
     Platform
 } from 'react-native';
 
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { SetNew } from '../../redux/action';
+
+import {useAtom} from "jotai";
+import { newUser } from '../jotai/store';
 
 
 const Birthday = () => {
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
 
-    const { GeneralResponse } = useSelector(s => s);
-    const dispatch = useDispatch();
+    const [newUserData, setNewUserData] = useAtom(newUser);
 
     const navigation = useNavigation();
 
     useEffect(
         () => {
-            console.log(GeneralResponse.newUser)
+            console.log(newUserData);
         }
     )
 
@@ -42,8 +42,8 @@ const Birthday = () => {
     }
 
     const next = () => {
-        dispatch(SetNew({...GeneralResponse.newUser, birthday: date}));
-        navigation.navigate("photo")
+        setNewUserData({...newUserData, birthday: date});
+        navigation.navigate("photo");
     }
 
     return (

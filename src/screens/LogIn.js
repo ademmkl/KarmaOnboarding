@@ -9,10 +9,10 @@ import {
   View
 } from 'react-native';
 
-import { useNavigation } from "@react-navigation/native";
+import { atom, useAtom } from 'jotai';
+import { users, currentUser } from './jotai/store';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { SetLogin, SetPass } from '../redux/action';
+import { useNavigation } from "@react-navigation/native";
 
 
 const LogIn = () => {
@@ -20,31 +20,48 @@ const LogIn = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const dispatch = useDispatch();
-  const { GeneralResponse } = useSelector(s => s);
+  const [users_db] = useAtom(users)
+  const [current, setCurrent] = useAtom(currentUser)
 
   const navigation = useNavigation();
+  
 
   const checkUser = () => {
-    const userExists = GeneralResponse.user.filter(
+
+    const userExists = users_db.filter(
       (value) => {
         return value.username === username
       }
     )
 
-    if (userExists.length) {
-
-      if (userExists[0].password === password) {
-        setFeedback("");
-        dispatch(SetLogin(userExists[0].id))
-        dispatch(SetPass(true));
-      } else {
-        setFeedback("*Kullanıcı adı veya şifre hatalı.");
-      }
-
-    } else{
+    if (!userExists.length){
       setFeedback("*Kullanıcı adı veya şifre hatalı.");
+      return;
     }
+
+    if (userExists[0].password != password){
+      setFeedback("*Kullanıcı adı veya şifre hatalı.");
+      return;
+    }
+
+    setFeedback("");
+    setCurrent(userExists[0])
+    console.log(current)
+    
+
+    // if (userExists.length) {
+
+    //   if (userExists[0].password === password) {
+    //     setFeedback("");
+    //     dispatch(SetLogin(userExists[0].id))
+    //     dispatch(SetPass(true));
+    //   } else {
+    //     setFeedback("*Kullanıcı adı veya şifre hatalı.");
+    //   }
+
+    // } else{
+    //   setFeedback("*Kullanıcı adı veya şifre hatalı.");
+    // }
 
   }
 
@@ -53,11 +70,11 @@ const LogIn = () => {
     <SafeAreaView style={styles.container}>
         <View>
           <Text style={{ color: "#fff", fontSize: 15 }}>Kullanıcı Adı</Text>
-          <TextInput onChangeText={setUsername} value={username} style={{ backgroundColor: "#fff", width: 230, height: 35, marginBottom: 10, paddingVertical: 0, paddingHorizontal: 10 }} />
+          <TextInput onChangeText={setUsername} value={username} style={{color: "#000", backgroundColor: "#fff", width: 230, height: 35, marginBottom: 10, paddingVertical: 0, paddingHorizontal: 10 }} />
         </View>
         <View>
           <Text style={{ color: "#fff", fontSize: 15 }}>Şifre</Text>
-          <TextInput secureTextEntry={true} onChangeText={setPassword} value={password} style={{ backgroundColor: "#fff", width: 230, height: 35, marginBottom: 50, paddingVertical: 0, paddingHorizontal: 10 }} />
+          <TextInput secureTextEntry={true} onChangeText={setPassword} value={password} style={{color: "#000", backgroundColor: "#fff", width: 230, height: 35, marginBottom: 50, paddingVertical: 0, paddingHorizontal: 10 }} />
         </View>
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity onPress={checkUser} style={styles.logIn}>

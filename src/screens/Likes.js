@@ -12,25 +12,24 @@ import {
 
 import Card from '../UserCard';
 
-import { useSelector } from 'react-redux';
+import {useAtom} from "jotai";
+import { users, currentUser } from './jotai/store';
+
 
 const Likes = () => {
   const [refresh, setRefresh] = useState(false);
-  const [users, setUsers] = useState([]);
+  const [usersWhoLikeYou, setUsersWhoLikeYou] = useState([]);
 
-  const { GeneralResponse } = useSelector(s => s);
+  const [usersData] = useAtom(users);
+  const [currentUserData] = useAtom(currentUser);
 
   useEffect(() => {
 
-    const userCurrent = GeneralResponse.user.find((value)=>{
-        return GeneralResponse.login === value.id
+    const newArr = usersData.filter((value) => {
+      return currentUserData.likes.includes(value.id)
     })
 
-    const newArr = GeneralResponse.user.filter((value) => {
-      return userCurrent.likes.includes(value.id)
-    })
-
-    setUsers(newArr);
+    setUsersWhoLikeYou(newArr);
 
   }, []);
 
@@ -50,7 +49,7 @@ const Likes = () => {
       </View>
 
       <FlatList
-        data={users}
+        data={usersWhoLikeYou}
         renderItem={({ item }) => <Card info={item} />}
         keyExtractor={item => item.id}
         contentContainerStyle={{ alignItems: "center", width: Dimensions.get("screen").width}}
@@ -73,5 +72,4 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: "#fff"
   },
-
 });

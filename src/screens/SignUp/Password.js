@@ -14,34 +14,33 @@ import { useNavigation } from "@react-navigation/native";
 
 import CheckBox from '@react-native-community/checkbox';
 
-import { useDispatch, useSelector } from "react-redux";
-import { SetLogin, SetNew, SetPass, SetUsers } from '../../redux/action';
+import { atom, useAtom } from 'jotai';
+import { users, newUser, currentUser } from '../jotai/store';
 
 
 const Password = () => {
     const [feedback, setFeedback] = useState("");
-    const [toggleCheckBox, setToggleCheckBox] = useState(false)
+    const [toggleCheckBox, setToggleCheckBox] = useState(false);
+
+    const [newUserData, setNewUserData] = useAtom(newUser);
+    const [currentUserData, setCurrentUserData] = useAtom(currentUser)
+    const[usersData, setUsersData] = useAtom(users);
 
     const navigation = useNavigation();
 
-    const { GeneralResponse } = useSelector(s => s)
-    const dispatch = useDispatch();
-
     const checkPassword = () => {
-        
 
-        if (GeneralResponse.newUser.password.length < 8) {
+        if (newUserData.password.length < 8) {
             setFeedback("*Şifre 8 karakterden kısa olamaz.")
         } else if (!toggleCheckBox) {
             setFeedback("*Devam etmek için KVKK metnini onaylamanız gerekmektedir.")
         } else {
-            const newUser = GeneralResponse.newUser
-
             setFeedback("");
-            dispatch(SetLogin(GeneralResponse.user.length.toString()))
-            dispatch(SetUsers([...GeneralResponse.user, newUser]))
-            dispatch(SetPass(true));
+            setCurrentUserData(newUserData);
+            setUsersData([...usersData, newUserData]);
+            console.log(newUserData);
         }
+
     }
 
     return (
@@ -51,14 +50,14 @@ const Password = () => {
                 <Text style={{ color: "#fff", fontSize: 15 }}>Şifre</Text>
                 <TextInput
                     secureTextEntry={true}
-                    value={GeneralResponse.newUser.password}
-                    onChangeText={(text) => dispatch(SetNew({...GeneralResponse.newUser, password: text, id: GeneralResponse.user.length.toString()}))}
+                    value={newUserData.password}
+                    onChangeText={(text) => setNewUserData({...newUserData, password: text, id: usersData.length.toString()}) }
                     style={styles.input}
                 />
             </View>
             <View style={styles.scroll}>
                 <ScrollView style={{ paddingHorizontal: 10 }}>
-                    <Text>
+                    <Text style={{color: "#000"}}>
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus autem voluptatibus nobis obcaecati,
                         commodi placeat doloremque. Illum ducimus laborum, ex molestiae consequatur modi soluta optio, totam eveniet
                         atque nulla repudiandae corporis earum eligendi autem officiis maiores! Officiis nihil sequi quis dicta vero
@@ -120,7 +119,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         paddingHorizontal: 10,
         paddingVertical: 0,
-        marginBottom: 30
+        marginBottom: 30,
+        color: "#000"
     },
     previous: {
         backgroundColor: "#fff",
