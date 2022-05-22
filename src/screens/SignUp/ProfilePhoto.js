@@ -60,7 +60,7 @@ const Photo = () => {
   return (
     <SafeAreaView style={styles.container}>
 
-      <Image source={newUserData.image != "" ? { uri: newUserData.image, width: 150, height: 150 } : require("./avatar.png")} resizeMode="contain" style={{ width: 150, height: 150, borderRadius: 75 }} />
+      <Image source={newUserData.image != "" ? { uri: newUserData.image, width: 160, height: 160 } : require("./avatar.png")} resizeMode="contain" style={{ width: 160, height: 160, borderRadius: 75 }} />
 
       <View style={{ flexDirection: "row", marginVertical: 40 }}>
         <TouchableOpacity onPress={() => navigation.goBack(null)} style={styles.previous}>
